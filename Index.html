@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Analog Clock</title>
+    <!-- Menggunakan font Google untuk tampilan yang bersih -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --clock-bg: rgba(30, 41, 59, 0.7);
+            --accent-color: #38bdf8;
+            --hour-hand: #ffffff;
+            --min-hand: #cbd5e1;
+            --sec-hand: #f43f5e;
+            --text-color: #f8fafc;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: var(--bg-color);
+            background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+            color: var(--text-color);
+            overflow: hidden;
+        }
+
+        /* Container Jam */
+        .clock-container {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .clock {
+            position: relative;
+            width: 350px;
+            height: 350px;
+            background: var(--clock-bg);
+            border-radius: 50%;
+            border: 8px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 
+                0 0 50px rgba(0, 0, 0, 0.5),
+                inset 0 0 20px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Titik tengah */
+        .clock::before {
+            content: '';
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: var(--sec-hand);
+            border-radius: 50%;
+            z-index: 100;
+        }
+
+        /* Angka-angka jam */
+        .clock span {
+            position: absolute;
+            inset: 20px;
+            text-align: center;
+            transform: rotate(calc(30deg * var(--i)));
+            font-size: 1.5rem;
+            font-weight: 300;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .clock span b {
+            display: inline-block;
+            transform: rotate(calc(-30deg * var(--i)));
+        }
+
+        /* Jarum Jam */
+        .hand {
+            position: absolute;
+            display: flex;
+            justify-content: center;
+            border-radius: 6px;
+        }
+
+        .hour {
+            width: 160px;
+            height: 160px;
+        }
+
+        .hour::before {
+            content: '';
+            position: absolute;
+            width: 6px;
+            height: 80px;
+            background: var(--hour-hand);
+            border-radius: 6px;
+        }
+
+        .min {
+            width: 230px;
+            height: 230px;
+        }
+
+        .min::before {
+            content: '';
+            position: absolute;
+            width: 4px;
+            height: 120px;
+            background: var(--min-hand);
+            border-radius: 6px;
+        }
+
+        .sec {
+            width: 280px;
+            height: 280px;
+        }
+
+        .sec::before {
+            content: '';
+            position: absolute;
+            width: 2px;
+            height: 150px;
+            background: var(--sec-hand);
+            border-radius: 6px;
+        }
+
+        /* Info Digital di bawah */
+        .digital-info {
+            text-align: center;
+        }
+
+        .date-display {
+            font-size: 1.1rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .digital-clock {
+            font-size: 2.5rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        /* Responsivitas */
+        @media (max-width: 450px) {
+            .clock {
+                width: 280px;
+                height: 280px;
+            }
+            .hour { width: 120px; height: 120px; }
+            .hour::before { height: 60px; }
+            .min { width: 180px; height: 180px; }
+            .min::before { height: 95px; }
+            .sec { width: 230px; height: 230px; }
+            .sec::before { height: 120px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="clock-container">
+        <!-- Jam Analog -->
+        <div class="clock">
+            <div class="hand hour" id="hr"></div>
+            <div class="hand min" id="mn"></div>
+            <div class="hand sec" id="sc"></div>
+
+            <!-- Generate Angka menggunakan Loop CSS variable -->
+            <span style="--i:1;"><b>1</b></span>
+            <span style="--i:2;"><b>2</b></span>
+            <span style="--i:3;"><b>3</b></span>
+            <span style="--i:4;"><b>4</b></span>
+            <span style="--i:5;"><b>5</b></span>
+            <span style="--i:6;"><b>6</b></span>
+            <span style="--i:7;"><b>7</b></span>
+            <span style="--i:8;"><b>8</b></span>
+            <span style="--i:9;"><b>9</b></span>
+            <span style="--i:10;"><b>10</b></span>
+            <span style="--i:11;"><b>11</b></span>
+            <span style="--i:12;"><b>12</b></span>
+        </div>
+
+        <!-- Info Tambahan -->
+        <div class="digital-info">
+            <div id="date" class="date-display">-- -- ----</div>
+            <div id="digital" class="digital-clock">00:00:00</div>
+        </div>
+    </div>
+
+    <script>
+        const hr = document.querySelector('#hr');
+        const mn = document.querySelector('#mn');
+        const sc = document.querySelector('#sc');
+        const digitalText = document.querySelector('#digital');
+        const dateText = document.querySelector('#date');
+
+        function updateClock() {
+            let day = new Date();
+            
+            // Logika Jam Analog
+            let hh = day.getHours() * 30;
+            let mm = day.getMinutes() * 6;
+            let ss = day.getSeconds() * 6;
+
+            // Rotasi jarum jam
+            hr.style.transform = `rotateZ(${(hh) + (mm/12)}deg)`;
+            mn.style.transform = `rotateZ(${mm}deg)`;
+            sc.style.transform = `rotateZ(${ss}deg)`;
+
+            // Logika Jam Digital
+            let h = day.getHours();
+            let m = day.getMinutes();
+            let s = day.getSeconds();
+
+            // Tambahkan angka 0 di depan jika < 10
+            h = (h < 10) ? "0" + h : h;
+            m = (m < 10) ? "0" + m : m;
+            s = (s < 10) ? "0" + s : s;
+
+            digitalText.innerHTML = `${h}:${m}:${s}`;
+
+            // Logika Tanggal
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            dateText.innerHTML = day.toLocaleDateString('id-ID', options);
+        }
+
+        // Jalankan setiap detik
+        setInterval(updateClock, 1000);
+
+        // Panggil sekali di awal agar tidak menunggu 1 detik
+        updateClock();
+    </script>
+</body>
+</html>
